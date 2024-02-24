@@ -1,6 +1,8 @@
 # How to run the code:
-### 1- Result of preprocessing is a file named 'CorrectedDataSet.txt'
-### 2- Open and run the file 'Test4Cnn_6.py'
+#### 1- Result of preprocessing is a file named 'CorrectedDataSet.txt'
+#### 2- Open and run the file 'Test4Cnn_6.py'
+
+
 
 
 
