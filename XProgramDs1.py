@@ -23,6 +23,7 @@ import time
 
  
 labels = ['Walking', 'Jogging', 'Sitting', 'Standing', 'Upstairs', 'Downstairs']
+labels2 = ['Walking', 'Jogging', 'Sitting', 'Standing', 'Upstairs', 'Downstairs']
  
 
 rawData = []
@@ -33,7 +34,19 @@ testLabels = []
 
 counter = 0 
 
-with open("D:\PythonTest\Test4Cnn\WorkingDatasets\1\CorrectedDataSet.txt", "r") as filestream:  
+# importing required module
+import csv
+ 
+
+
+
+
+
+
+
+
+
+with open("C:\\D Drive\\PythonTest\\Test4Cnn\\WorkingDatasets\\1\\CorrectedDataSet.txt", "r") as filestream:  
 #with open("D:\PythonTest\Test4Cnn\FakedDataSet.txt", "r") as filestream:    
     for line in filestream:
         
@@ -155,6 +168,7 @@ for activityNumber in range(0,6):
          
 
 frames = np.asarray(frames).reshape(-1, frameSize, 3)
+#(6288, 90, 3)
 labels = np.asarray(labels)
 
 del briefData
@@ -163,9 +177,11 @@ del briefData
 X_train, X_test, y_train, y_test = train_test_split(frames, labels, test_size = 0.2, random_state = 0, stratify = labels)
 
 X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], X_train.shape[2], 1)
+#(5030, 90, 3, 1)
+
+
 X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], X_test.shape[2], 1)
-
-
+#(1258, 90, 3, 1)
 
 #this was the latest serius method
 #def createModel():
@@ -335,15 +351,52 @@ def plot_learningCurve(history, epochs):
 
 model = CNN_BN_CBAM_Method3()
 model.summary()
-start = time.time() 
+
+results = []
+
+# This is to measure time duration of running algorithm
+# opening the file
+# with open("D:\Temp\CNN_BN_Method2.csv", "w", newline="") as f:
+#     # creating the writer
+#     writer = csv.writer(f)
+#     # using writerows, all rows at once
+#     for runCounter in range(0,50):
+#         start = time.time() 
+#         #history = model.fit(X_train, y_train, epochs = 17, validation_data= (X_test, y_test), verbose=1)
+#         history = model.fit(X_train, y_train, epochs = 25, validation_split=0.2, verbose=1)
+#         end = time.time()
+#         results.append(end-start)
+#         writer.writerow([end-start])
+
+
+     
 #history = model.fit(X_train, y_train, epochs = 17, validation_data= (X_test, y_test), verbose=1)
 history = model.fit(X_train, y_train, epochs = 25, validation_split=0.2, verbose=1)
-end = time.time()
-print(f'Training duration: {end - start}')
+
+
+
+#print(f'Training duration: {end - start}')
 plot_learningCurve(history, 25)
 
 predict_x=model.predict(X_test) 
 y_pred=np.argmax(predict_x,axis=1)
+
+# This is to print failed tests
+# opening the file
+# with open("D:\Temp\CBAMFails.csv", "w", newline="") as f:     
+# #     # creating the writer     
+#     writer = csv.writer(f)
+# #     # using writerows, all rows at once
+#     for counter in range(0,y_test.shape[0]):
+#         if y_test[counter]!=y_pred[counter]:
+#             writer.writerow([f'Real: {labels2[y_test[counter]]} - Predicted as {labels2[y_pred[counter]]}'])
+#             for rowCounter in range(0,90):
+#                 writer.writerow([X_test[counter][rowCounter][0][0],X_test[counter][rowCounter][1][0],X_test[counter][rowCounter][2][0]])
+#             writer.writerow([])
+        
+
+
+
 
 mat = confusion_matrix(y_test, y_pred)
 plot_confusion_matrix(conf_mat=mat, class_names=le.classes_, show_normed=True, figsize=(7,7)) 

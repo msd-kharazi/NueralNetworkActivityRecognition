@@ -1,3 +1,6 @@
+#Latest last result is this file. I should implement CBAM
+
+
 from asyncore import loop
 from operator import countOf
 #from tkinter.ttk import _Padding
@@ -22,7 +25,24 @@ import time
  
 
  
-labels = ['Walking', 'Jogging', 'Sitting', 'Standing', 'Upstairs', 'Downstairs']
+labels = ['Walking', 
+          'Jogging', 
+          'Stairs', 
+          'Sitting', 
+          'Standing', 
+          'Typing',
+          'Brushing Teeth',
+          'Eating Soup',
+          'Eating Chips',
+          'Eating Pasta',
+          'Drinking from Cup',
+          'Eating Sandwich',
+          'Kicking (Soccer Ball)',
+          'Playing Catch w/Tennis Ball',
+          'Dribbling (Basketball)',
+          'Writing',
+          'Clapping',
+          'Folding Clothes']
  
 
 rawData = []
@@ -33,7 +53,7 @@ testLabels = []
 
 counter = 0 
 
-with open("D:\PythonTest\Test4Cnn\WorkingDatasets\1\CorrectedDataSet.txt", "r") as filestream:  
+with open("D:\PythonTest\Test4Cnn\WorkingDatasets\\2\Preprocessed\PreprocessedDataSet.txt", "r") as filestream:  
 #with open("D:\PythonTest\Test4Cnn\FakedDataSet.txt", "r") as filestream:    
     for line in filestream:
         
@@ -68,21 +88,48 @@ rawDataFrame = pd.DataFrame(data=rawData, columns=columns)
 
 walkingActivityData = rawDataFrame[rawDataFrame.Activity == 'Walking'].sort_values(by=['UserId', 'TimeStamp'])
 joggingActivityData = rawDataFrame[rawDataFrame.Activity == 'Jogging'].sort_values(by=['UserId', 'TimeStamp'])
-upstairsActivityData = rawDataFrame[rawDataFrame.Activity == 'Upstairs'].sort_values(by=['UserId', 'TimeStamp'])
-downstairsActivityData = rawDataFrame[rawDataFrame.Activity == 'Downstairs'].sort_values(by=['UserId', 'TimeStamp'])
+stairsActivityData = rawDataFrame[rawDataFrame.Activity == 'Stairs'].sort_values(by=['UserId', 'TimeStamp'])
 sittingActivityData = rawDataFrame[rawDataFrame.Activity == 'Sitting'].sort_values(by=['UserId', 'TimeStamp'])
 standingActivityData = rawDataFrame[rawDataFrame.Activity == 'Standing'].sort_values(by=['UserId', 'TimeStamp'])
+typingActivityData = rawDataFrame[rawDataFrame.Activity == 'Typing'].sort_values(by=['UserId', 'TimeStamp'])
+brushingTeethActivityData = rawDataFrame[rawDataFrame.Activity == 'Brushing Teeth'].sort_values(by=['UserId', 'TimeStamp'])
+eatingSoupActivityData = rawDataFrame[rawDataFrame.Activity == 'Eating Soup'].sort_values(by=['UserId', 'TimeStamp'])
+eatingChipsActivityData = rawDataFrame[rawDataFrame.Activity == 'Eating Chips'].sort_values(by=['UserId', 'TimeStamp'])
+eatingPastaActivityData = rawDataFrame[rawDataFrame.Activity == 'Eating Pasta'].sort_values(by=['UserId', 'TimeStamp'])
+drinkingFromCupActivityData = rawDataFrame[rawDataFrame.Activity == 'Drinking from Cup'].sort_values(by=['UserId', 'TimeStamp'])
+eatingSandwichActivityData = rawDataFrame[rawDataFrame.Activity == 'Eating Sandwich'].sort_values(by=['UserId', 'TimeStamp'])
+kickingSoccerBallActivityData = rawDataFrame[rawDataFrame.Activity == 'Kicking (Soccer Ball)'].sort_values(by=['UserId', 'TimeStamp'])
+playingCatchTennisBallActivityData = rawDataFrame[rawDataFrame.Activity == 'Playing Catch w/Tennis Ball'].sort_values(by=['UserId', 'TimeStamp'])
+dribblinlgBasketballActivityData = rawDataFrame[rawDataFrame.Activity == 'Dribbling (Basketball)'].sort_values(by=['UserId', 'TimeStamp'])
+writingActivityData = rawDataFrame[rawDataFrame.Activity == 'Writing'].sort_values(by=['UserId', 'TimeStamp']) 
+clappingActivityData = rawDataFrame[rawDataFrame.Activity == 'Clapping'].sort_values(by=['UserId', 'TimeStamp']) 
+foldingClothesActivityData = rawDataFrame[rawDataFrame.Activity == 'Folding Clothes'].sort_values(by=['UserId', 'TimeStamp']) 
+ 
+ 
+
+
 
 
 minCount = min(
-    walkingActivityData.shape[0],
-    joggingActivityData.shape[0],
-    upstairsActivityData.shape[0],
-    downstairsActivityData.shape[0],
-    sittingActivityData.shape[0],
-    standingActivityData.shape[0])
-
-
+    walkingActivityData.shape[0], 
+    joggingActivityData.shape[0], 
+    stairsActivityData.shape[0], 
+    sittingActivityData.shape[0], 
+    standingActivityData.shape[0], 
+    typingActivityData.shape[0], 
+    brushingTeethActivityData.shape[0], 
+    eatingSoupActivityData.shape[0], 
+    eatingChipsActivityData.shape[0], 
+    eatingPastaActivityData.shape[0], 
+    drinkingFromCupActivityData.shape[0], 
+    eatingSandwichActivityData.shape[0], 
+    kickingSoccerBallActivityData.shape[0], 
+    playingCatchTennisBallActivityData.shape[0], 
+    dribblinlgBasketballActivityData.shape[0], 
+    writingActivityData.shape[0], 
+    clappingActivityData.shape[0], 
+    foldingClothesActivityData.shape[0]
+    )
 
 
 samplingRate = 20
@@ -96,29 +143,70 @@ countOfFramesOfMinActivity = int(minCount/float(overlapSize))
 countOfNeededRecordsForEachActivity = countOfFramesOfMinActivity * overlapSize
 
 
+
 walkingActivityData = walkingActivityData.head(countOfNeededRecordsForEachActivity).copy()
 joggingActivityData = joggingActivityData.head(countOfNeededRecordsForEachActivity).copy()
-upstairsActivityData = upstairsActivityData.head(countOfNeededRecordsForEachActivity).copy()
-downstairsActivityData = downstairsActivityData.head(countOfNeededRecordsForEachActivity).copy()
+stairsActivityData = stairsActivityData.head(countOfNeededRecordsForEachActivity).copy()
 sittingActivityData = sittingActivityData.head(countOfNeededRecordsForEachActivity).copy()
 standingActivityData = standingActivityData.head(countOfNeededRecordsForEachActivity).copy()
+typingActivityData = typingActivityData.head(countOfNeededRecordsForEachActivity).copy()
+brushingTeethActivityData = brushingTeethActivityData.head(countOfNeededRecordsForEachActivity).copy()
+eatingSoupActivityData = eatingSoupActivityData.head(countOfNeededRecordsForEachActivity).copy()
+eatingChipsActivityData = eatingChipsActivityData.head(countOfNeededRecordsForEachActivity).copy()
+eatingPastaActivityData = eatingPastaActivityData.head(countOfNeededRecordsForEachActivity).copy()
+drinkingFromCupActivityData = drinkingFromCupActivityData.head(countOfNeededRecordsForEachActivity).copy()
+eatingSandwichActivityData = eatingSandwichActivityData.head(countOfNeededRecordsForEachActivity).copy()
+kickingSoccerBallActivityData = kickingSoccerBallActivityData.head(countOfNeededRecordsForEachActivity).copy()
+playingCatchTennisBallActivityData = playingCatchTennisBallActivityData.head(countOfNeededRecordsForEachActivity).copy()
+dribblinlgBasketballActivityData = dribblinlgBasketballActivityData.head(countOfNeededRecordsForEachActivity).copy()
+writingActivityData = writingActivityData.head(countOfNeededRecordsForEachActivity).copy()
+clappingActivityData = clappingActivityData.head(countOfNeededRecordsForEachActivity).copy()
+foldingClothesActivityData = foldingClothesActivityData.head(countOfNeededRecordsForEachActivity).copy()
+ 
 
 
 
 columns = ['UserId', 'TimeStamp', 'Activity', 'X', 'Y', 'Z']
 balancedDataFrame = pd.concat([walkingActivityData,
-                               joggingActivityData,
-                               upstairsActivityData,
-                               downstairsActivityData,
-                               sittingActivityData,
-                               standingActivityData], ignore_index=True)
+                               joggingActivityData, 
+                               stairsActivityData, 
+                               sittingActivityData, 
+                               standingActivityData, 
+                               typingActivityData, 
+                               brushingTeethActivityData, 
+                               eatingSoupActivityData, 
+                               eatingChipsActivityData, 
+                               eatingPastaActivityData, 
+                               drinkingFromCupActivityData, 
+                               eatingSandwichActivityData, 
+                               kickingSoccerBallActivityData, 
+                               playingCatchTennisBallActivityData, 
+                               dribblinlgBasketballActivityData, 
+                               writingActivityData, 
+                               clappingActivityData, 
+                               foldingClothesActivityData 
+                               ], ignore_index=True)
+   
 
 del walkingActivityData
 del joggingActivityData
-del upstairsActivityData
-del downstairsActivityData
+del stairsActivityData
 del sittingActivityData
 del standingActivityData
+del typingActivityData
+del brushingTeethActivityData
+del eatingSoupActivityData
+del eatingChipsActivityData
+del eatingPastaActivityData
+del drinkingFromCupActivityData
+del eatingSandwichActivityData
+del kickingSoccerBallActivityData
+del playingCatchTennisBallActivityData
+del dribblinlgBasketballActivityData,
+del writingActivityData
+del clappingActivityData
+del foldingClothesActivityData  
+
 
 
 le = LabelEncoder()
@@ -145,7 +233,7 @@ labels = []
 del balancedDataFrame
 
 
-for activityNumber in range(0,6):
+for activityNumber in range(0,18):
     frameCounterBase = (activityNumber*countOfFramesOfMinActivity)
     for counter in range(frameCounterBase+1,frameCounterBase+countOfFramesOfMinActivity): 
         fromNumber=(counter-1)*overlapSize
@@ -264,7 +352,7 @@ def CNN_Method1():
     model.add(Flatten())
     model.add(Dense(64, activation = 'relu')) 
     #model.add(Dropout(0.5))
-    model.add(Dense(6, activation='softmax')) 
+    model.add(Dense(18, activation='softmax')) 
     model.compile(optimizer=Adam(learning_rate = 0.001), loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
     return model
 
@@ -283,7 +371,7 @@ def CNN_BN_Method2():
     model.add(Dense(64, activation = 'relu')) 
     #model.add(BatchNormalization())
 
-    model.add(Dense(6, activation='softmax')) 
+    model.add(Dense(18, activation='softmax')) 
     #model.add(BatchNormalization())
     model.compile(optimizer=Adam(learning_rate = 0.001), loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
     return model
@@ -305,7 +393,7 @@ def CNN_BN_CBAM_Method3():
     #model.add(BatchNormalization())
     #model.add(Dropout(0.5))
 
-    model.add(Dense(6, activation='softmax')) 
+    model.add(Dense(18, activation='softmax')) 
     #model.add(BatchNormalization())
     model.compile(optimizer=Adam(learning_rate = 0.001), loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
     return model
@@ -320,9 +408,9 @@ def plot_learningCurve(history, epochs):
   plt.ylabel('Accuracy')
   plt.xlabel('Epoch')
   plt.legend(['Train', 'Val'], loc='upper left')
-  plt.show()
+  plt.show(block=True)
   
-  os.system("pause")
+  # os.system("pause")
 
   # Plot training & validation loss values
   plt.plot(epoch_range, history.history['loss'])
@@ -331,9 +419,10 @@ def plot_learningCurve(history, epochs):
   plt.ylabel('Loss')
   plt.xlabel('Epoch')
   plt.legend(['Train', 'Val'], loc='upper left')
-  plt.show()
-
+  plt.show(block=True)
+  
 model = CNN_BN_CBAM_Method3()
+# model = CNN_Method1()
 model.summary()
 start = time.time() 
 #history = model.fit(X_train, y_train, epochs = 17, validation_data= (X_test, y_test), verbose=1)
@@ -347,6 +436,6 @@ y_pred=np.argmax(predict_x,axis=1)
 
 mat = confusion_matrix(y_test, y_pred)
 plot_confusion_matrix(conf_mat=mat, class_names=le.classes_, show_normed=True, figsize=(7,7)) 
-plt.show()
+plt.show(block=True)
 
 os.system("pause")

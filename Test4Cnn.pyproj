@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1e4ec132-f54a-461c-b0b7-10a11e37b6f7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Test4Cnn_6.py</StartupFile>
+    <StartupFile>XProgramDs4.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -35,9 +35,16 @@
     <Compile Include="Test4Cnn_4.py" />
     <Compile Include="Test4Cnn_5.py" />
     <Compile Include="Test4Cnn_6.py" />
+    <Compile Include="XProgramDs1.py" />
+    <Compile Include="XProgramDs2.py" />
+    <Compile Include="XProgramDs3.py" />
+    <Compile Include="XProgramDs4.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OriginalDatasets\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

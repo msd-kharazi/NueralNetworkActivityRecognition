@@ -10,8 +10,9 @@ class CBAM4(Layer):
         self.use_spatial_att = use_spatial_att
 
     def build(self, input_shape):
+        #(None, 90, 3, 32)
         channels = input_shape[-1]
-        
+        #32
         self.channel_attention_module_Dense1 = Dense(channels//self.reduction_ratio, activation="relu", use_bias=False)
         self.channel_attention_module_Dense2 = Dense(channels, use_bias=False)
         self.channel_attention_module_GlobalAveragePooling2D = GlobalAveragePooling2D()
